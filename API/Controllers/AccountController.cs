@@ -2,6 +2,7 @@
 using API.Data;
 using API.Dtos;
 using API.Entities;
+using API.Extensions;
 using API.Interfaces;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
@@ -34,13 +35,7 @@ public class AccountController(AppDbContext context, ITokenService tokenService)
         context.User.Add(user);
         await context.SaveChangesAsync();
 
-        return new UserDto
-        {
-            Id = user.Id,
-            Email = user.Email,
-            DisplayName = user.DisplayName,
-            Token = tokenService.CreateToken(user)
-        };
+        return user.ToDto(tokenService);
     }
 
     [HttpPost("login")]
@@ -56,14 +51,7 @@ public class AccountController(AppDbContext context, ITokenService tokenService)
             if (computedHash[i] != user.PasswordHash[i]) return Unauthorized("Invalid password");
         }
 
-        return new UserDto
-        {
-            Id = user.Id,
-            Email = user.Email,
-            DisplayName = user.DisplayName,
-            Token = tokenService.CreateToken(user) //Creazione del JWT con i claims dell'utente autenticato
-        };
-
+        return user.ToDto(tokenService);
     }
 
 
