@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace API.Controllers;
 
 
+
 public class MembersController(AppDbContext context) : BaseApiController
 {
     [HttpGet]
